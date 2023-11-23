@@ -1,30 +1,23 @@
-/* -------------------------------------------------------------------------- */
-/*                    INTRODUCTION TO MIDDLEWARE IN EXPRESS JS                   */
-/* -------------------------------------------------------------------------- */
-
 const express = require("express")
+const bodyParser = require("body-parser")
 
 const app = express()
 
-app.use((req, res, next) => {
+app.use(bodyParser.urlencoded({ extended: false }))
 
-    console.log("Here is our first middleWare")
-    next()
+app.use('/add-product', (req, res, next) => {
+    console.log("IN THE ADD PRODUCT MIDDLEWARE")
+    res.send(`<form action="/product" method="POST"><input type="text" name="title"><input type="number" name="quantity"><button type="submit">Add Product</button></form>`)
 })
 
-app.use((req, res, next) => {
-    console.log("Here is our second middleware ")
-
-    if (req.url === "/product") {
-        res.send({ key1: value })
-    }
-    else {
-        res.send("<h1>Hello from Express Js  ")
-
-    }
-
+app.use('/product', (req, res, next) => {
+    console.log(req.body)
+    res.redirect("/")
 })
 
+app.use('/', (req, res, next) => {
+    console.log("IN THE HOME PAGE MIDDLEWARE ")
+    res.send("<h1>Hello from Express Js</h1>")
+})
 
 app.listen(8000)
-
